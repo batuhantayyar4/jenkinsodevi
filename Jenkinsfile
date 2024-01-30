@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         // ECR ve Kubernetes ayarları
-        REGISTRY_URL = '992382515999.dkr.ecr.us-east-1.amazonaws.com/odev'
-        IMAGE_NAME = 'my-app'
+        REGISTRY_URL = '992382515999.dkr.ecr.us-east-1.amazonaws.com'
+        IMAGE_NAME = 'odev'
         TAG = 'latest'
     }
 
