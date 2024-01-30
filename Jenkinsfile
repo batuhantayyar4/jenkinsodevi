@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-                        bat 'kubectl set image deployment/my-app-deployment my-app=%REGISTRY_URL%/%IMAGE_NAME%:%TAG%'
+                        bat 'kubectl set image deployment/my-app-deployment odev=%REGISTRY_URL%/%IMAGE_NAME%:%TAG%'
                     }
                 }
             }
