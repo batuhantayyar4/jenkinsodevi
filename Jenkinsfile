@@ -32,9 +32,9 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-					withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-						bat 'kubectl set image deployment/my-app-deployment my-app=%REGISTRY_URL%/%IMAGE_NAME%:%TAG%'
-					}
+                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                        bat 'kubectl set image deployment/my-app-deployment my-app=%REGISTRY_URL%/%IMAGE_NAME%:%TAG%'
+                    }
                 }
             }
         }
