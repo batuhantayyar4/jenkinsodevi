@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG'), 
-                             [[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
+                             [[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]]) {
                         bat 'kubectl set image deployment/my-app-deployment my-app=%REGISTRY_URL%/%IMAGE_NAME%:%TAG%'
                     }
                 }
