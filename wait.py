@@ -2,7 +2,7 @@ import time
 import sys
 
 def wait(seconds):
-    for _ in range(seconds):
+    for _ in range(int(seconds)):
         sys.stdout.write('.')
         sys.stdout.flush()
         time.sleep(1)
