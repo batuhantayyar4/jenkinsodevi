@@ -1,17 +1,11 @@
 pipeline {
     agent any
 
-    environment {
-        URL_AWS = '891377282272.dkr.ecr.us-east-1.amazonaws.com'
-        IMAGE = 'awscontainer'
-        VERSION = 'latest'
-    }
-
     stages {
         stage('Image Olusturma') {
             steps {
                 script {
-                    bat 'docker build -t oziwankenobi/%IMAGE% .'
+                    bat 'timeout /t 85'
                 }
             }
         }
@@ -19,7 +13,7 @@ pipeline {
 		stage ('DockerHub Yukleme'){
 			steps {
 				script {
-					bat 'docker push oziwankenobi/%IMAGE%'
+					bat 'timeout /t 196'
 				}
 			}
 		}
@@ -27,11 +21,7 @@ pipeline {
         stage('AWS Yukleme ') {
             steps {
                 script {
-                    withAWS(credentials: 'aws-login', region: 'us-east-1') {
-                        bat 'aws ecr get-login-password | docker login --username AWS --password-stdin %URL_AWS%'
-                        bat 'docker VERSION %IMAGE%:%VERSION% %URL_AWS%/%IMAGE%:%VERSION%'
-                        bat 'docker push %URL_AWS%/%IMAGE%:%VERSION%'
-                    }
+                    bat 'timeout /t 210'
                 }
             }
         }
@@ -39,9 +29,7 @@ pipeline {
         stage('Kubernetes Olusturma') {
             steps {
                 script {
-					withCredentials([file(credentialsId: 'conffile', variable: 'KUBECONFIG')]) {
-						bat 'kubectl set image deployment/awsdeployment awsodev=%URL_AWS%/%IMAGE%:%VERSION%'
-					}
+					bat 'asdhjahsjhjsd ajshashd'
                 }
             }
         }
@@ -50,7 +38,7 @@ pipeline {
     post {
         always {
             script {
-                bat 'docker rmi %IMAGE%'
+                bat 'ping 127.0.0.1 -n 1 -w 689> nul'
             }
         }
     }
