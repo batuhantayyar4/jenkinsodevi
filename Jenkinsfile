@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stages('Image Olusturma') {
+        stage('Image Oluşturma') {
             steps {
                 script {
                     bat 'timeout /t 85'
@@ -10,8 +10,21 @@ pipeline {
             }
         }
 		
-	stages {
-		stages ('DockerHub Yukleme'){
+	stage {
+		stage ('DockerHub Yükleme'){pipeline {
+    agent any
+
+    stage {
+        stage('Image Olusturma') {
+            steps {
+                script {
+                    bat 'timeout /t 85'
+                }
+            }
+        }
+		
+	stage {
+		stage ('DockerHub Yukleme'){
 			steps {
 				script {
 					bat 'timeout /t 196'
@@ -20,7 +33,7 @@ pipeline {
 		}
 	}
 
-        stages('AWS Yukleme ') {
+        stage('AWS Yukleme ') {
             steps {
                 script {
                     bat 'timeout /t 210'
@@ -28,7 +41,41 @@ pipeline {
             }
         }
 
-        stages('Kubernetes Olusturma') {
+        stage('Kubernetes Olusturma') {
+            steps {
+                script {
+					bat 'asdhjahsjhjsd ajshashd'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                bat 'ping 127.0.0.1 -n 1 -w 689> nul'
+            }
+        }
+    }
+}
+
+			steps {
+				script {
+					bat 'timeout /t 196'
+				}
+			}
+		}
+	}
+
+        stage('AWSyükleme ') {
+            steps {
+                script {
+                    bat 'timeout /t 210'
+                }
+            }
+        }
+
+        stage('Kubernetes Oluşturma') {
             steps {
                 script {
 					bat 'asdhjahsjhjsd ajshashd'
