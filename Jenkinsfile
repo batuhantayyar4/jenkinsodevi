@@ -5,7 +5,7 @@ pipeline {
         stage('Image Olusturma') {
             steps {
                 script {
-                    bat '\"C:\\Users\\ahgq7\\AppData\\Loca\programs\\Python\\Python312\\python.exe\" wait.py 85000'
+                    bat '\"C:\\Users\\ahgq7\\AppData\\Local\\programs\\Python\\Python312\\python.exe\" wait.py 85000'
                 }
             }
         }
@@ -13,7 +13,7 @@ pipeline {
 		stage ('DockerHub Yukleme'){
 			steps {
 				script {
-					bat '\"C:\\Users\\ahgq7\\AppData\\Loca\programs\\Python\\Python312\\python.exe\" wait.py 196000'
+					bat '\"C:\\Users\\ahgq7\\AppData\\Local\\programs\\Python\\Python312\\python.exe\" wait.py 196000'
 				}
 			}
 		}
@@ -21,7 +21,7 @@ pipeline {
         stage('AWS Yukleme ') {
             steps {
                 script {
-                    bat '\"C:\\Users\\ahgq7\\AppData\\Loca\programs\\Python\\Python312\\python.exe\" wait.py 210000'
+                    bat '\"C:\\Users\\ahgq7\\AppData\\Local\\programs\\Python\\Python312\\python.exe\" wait.py 210000'
                 }
             }
         }
@@ -38,7 +38,7 @@ pipeline {
     post {
         always {
             script {
-                bat '\"C:\\Users\\ahgq7\\AppData\\Loca\programs\\Python\\Python312\\python.exe\" wait.py 689'
+                bat '\"C:\\Users\\ahgq7\\AppData\\Local\\programs\\Python\\Python312\\python.exe\" wait.py 689'
             }
         }
     }
