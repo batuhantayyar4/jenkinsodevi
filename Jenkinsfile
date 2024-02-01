@@ -1,42 +1,37 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Image Oluşturma') {
-            steps {
-                script {
-                    bat 'timeout /t 85'
-                }
-            }
-        }
-		
-	stage {
-		stage ('DockerHub Yükleme'){pipeline {
-    agent any
+    environment {
+        URL = '891377282272.dkr.ecr.us-east-1.amazonaws.com'
+        IMAGE = 'awscontainer'
+        VERSION = 'latest'
+    }
 
-    stage {
+    stages {
         stage('Image Olusturma') {
             steps {
                 script {
-                    bat 'timeout /t 85'
+                    bat 'docker build -t oziwankenobi/%IMAGE% .'
                 }
             }
         }
 		
-	stage {
 		stage ('DockerHub Yukleme'){
 			steps {
 				script {
-					bat 'timeout /t 196'
+					bat 'docker push oziwankenobi/%IMAGE%'
 				}
 			}
 		}
-	}
 
         stage('AWS Yukleme ') {
             steps {
                 script {
-                    bat 'timeout /t 210'
+                    withAWS(credentials: 'aws-login', region: 'us-east-1') {
+                        bat 'aws ecr get-login-password | docker login --username AWS --password-stdin %URL%'
+                        bat 'docker VERSION %IMAGE%:%VERSION% %URL%/%IMAGE%:%VERSION%'
+                        bat 'docker push %URL%/%IMAGE%:%VERSION%'
+                    }
                 }
             }
         }
@@ -44,7 +39,9 @@ pipeline {
         stage('Kubernetes Olusturma') {
             steps {
                 script {
-					bat 'asdhjahsjhjsd ajshashd'
+					withCredentials([file(credentialsId: 'conffile', variable: 'KUBECONFIG')]) {
+						bat 'kubectl set image deployment/awsdeployment awsodev=%URL%/%IMAGE%:%VERSION%'
+					}
                 }
             }
         }
@@ -53,41 +50,7 @@ pipeline {
     post {
         always {
             script {
-                bat 'ping 127.0.0.1 -n 1 -w 689> nul'
-            }
-        }
-    }
-}
-
-			steps {
-				script {
-					bat 'timeout /t 196'
-				}
-			}
-		}
-	}
-
-        stage('AWSyükleme ') {
-            steps {
-                script {
-                    bat 'timeout /t 210'
-                }
-            }
-        }
-
-        stage('Kubernetes Oluşturma') {
-            steps {
-                script {
-					bat 'asdhjahsjhjsd ajshashd'
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            script {
-                bat 'ping 127.0.0.1 -n 1 -w 689> nul'
+                bat 'docker rmi %IMAGE%'
             }
         }
     }
