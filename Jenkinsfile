@@ -1,35 +1,40 @@
 pipeline {
     agent any
 
+    environment {
+        // ECR ve Kubernetes ayarları
+        REGISTRY_URL = '992382515999.dkr.ecr.us-east-1.amazonaws.com'
+        IMAGE_NAME = 'odev'
+        TAG = 'latest'
+    }
+
     stages {
-        stage('Image Olusturma') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    bat '\"C:\\Users\\ahgq7\\AppData\\Local\\programs\\Python\\Python312\\python.exe\" wait.py 3000'
-                }
-            }
-        }
-		
-		stage ('DockerHub Yukleme'){
-			steps {
-				script {
-					bat '\"C:\\Users\\ahgq7\\AppData\\Local\\programs\\Python\\Python312\\python.exe\" wait.py 7000'
-				}
-			}
-		}
-
-        stage('AWS Yukleme ') {
-            steps {
-                script {
-                    bat '\"C:\\Users\\ahgq7\\AppData\\Local\\programs\\Python\\Python312\\python.exe\" wait.py 17000'
+                    bat 'docker build -t %IMAGE_NAME% .'
                 }
             }
         }
 
-        stage('Kubernetes Olusturma') {
+        stage('Push to AWS ECR') {
             steps {
                 script {
-					bat 'asdhjahsjhjsd ajshashd'
+                    withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
+                        bat 'aws ecr get-login-password | docker login --username AWS --password-stdin %REGISTRY_URL%'
+                        bat 'docker tag %IMAGE_NAME%:%TAG% %REGISTRY_URL%/%IMAGE_NAME%:%TAG%'
+                        bat 'docker push %REGISTRY_URL%/%IMAGE_NAME%:%TAG%'
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+					withCredentials([file(credentialsId: 'k8s-kubeconfig', variable: 'KUBECONFIG')]) {
+						bat 'kubectl set image deployment/my-app-deployment my-app=%REGISTRY_URL%/%IMAGE_NAME%:%TAG%'
+					}
                 }
             }
         }
@@ -38,7 +43,7 @@ pipeline {
     post {
         always {
             script {
-                bat '\"C:\\Users\\ahgq7\\AppData\\Local\\programs\\Python\\Python312\\python.exe\" wait.py 689'
+                bat 'docker rmi %IMAGE_NAME%'
             }
         }
     }
